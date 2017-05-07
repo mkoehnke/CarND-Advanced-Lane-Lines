@@ -96,10 +96,10 @@ The code for my perspective transform includes a function called `warp()`, which
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 800, 520      | 1050, 520        | 
-| 1050, 680      | 1050, 680      |
-| 270, 680     | 270, 680      |
-| 490, 520      | 270, 520        |
+| 800, 520      | 1020, 520        | 
+| 1045, 680      | 1020, 680      |
+| 260, 680     | 260, 680      |
+| 490, 520      | 260, 520        |
 
 To help me find the correct source points, I plotted 'dots' onto the source image:
 ![alt text][img11]
@@ -125,7 +125,18 @@ Secondly, I identified the most prominent peaks and used them as a starting poin
 
 The code for this step is contained in the code cells 19-20 of the IPython notebook.
 
-First, I defined the (provided) conversions for x,y from pixel space to meters. Then I identified the x,y positions of all nonzero pixels in the image, extracted the left/right line pixel positions and used `polyfit()` to fit polynomials to x,y in world space. Afterwards, I calculated the radii of curvature by using the provided sample implementation. In order to calculate the position of the vehicle with respect to center, I first calculated the absolute car position (image width/2) and the lane center position using the identified left/right lanes. Then I determined the center value by using the following calculation: `(car_position - lane_center_position) * x_meters_per_pixel`.
+First, I defined the (provided) conversions for x,y from pixel space to meters. Then I identified the x,y positions of all nonzero pixels in the image, extracted the left/right line pixel positions and used `polyfit()` to fit polynomials to x,y in world space. Afterwards, I calculated the radii of curvature by using the provided sample implementation. In order to calculate the position of the vehicle with respect to center, I first calculated the absolute car position (image width/2) and the lane center position using the identified left/right lanes. Then I determined the center value by using the following calculation: 
+
+```python
+if (lane_center_position - car_position > 0):
+	leng = 3.66/2.
+    center_dist = ((lane_center_position-car_position)/car_position*leng)
+    head = ("Right",center_dist)
+else:
+	leng = 3.66/2.
+	center_dist = ((lane_center_position-car_position)/car_position*leng)*-1
+	head = ("Left",center_dist)
+```
 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
